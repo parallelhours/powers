@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Good Prompting — Tutorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600;6..96,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  <style>
+    /* ===========================================
+       THEME: Notebook Tabs
+       Vibe: editorial, organized, tactile
+       Best for: reports, reviews, structured storytelling
+       Fonts: Bodoni Moda + DM Sans
+       Palette: cream paper on charcoal with pastel tabs
+       =========================================== */
+    :root {
+      --bg-dark: #1a1a2e;
+      --bg-medium: #222238;
+      --paper: #f5f0e8;
+      --paper-shadow: rgba(0, 0, 0, 0.25);
+      --text: #2d2d3d;
+      --text-muted: #8a8a9a;
+      --text-light: #b0aab0;
+      --tab-pink: #f0c4ce;
+      --tab-mint: #b8e0cc;
+      --tab-lavender: #d0c0e8;
+      --tab-peach: #e8d0c0;
+      --tab-sky: #c0d4ec;
+      --tab-gold: #e0d4a0;
+      --tab-coral: #e8b8b8;
+      --ring: #c8b8a0;
+      --ring-light: #e0d8c8;
+      --accent: #8b7a60;
+      --accent-dark: #6b5a40;
+
+      --font-display: 'Bodoni Moda', Georgia, serif;
+      --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+      --title-size: clamp(1.75rem, 5.5vw, 4rem);
+      --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+      --h3-size: clamp(1rem, 2.2vw, 1.6rem);
+      --body-size: clamp(0.75rem, 1.4vw, 1.05rem);
+      --small-size: clamp(0.65rem, 1vw, 0.85rem);
+      --tab-size: clamp(0.6rem, 0.9vw, 0.75rem);
+
+      --slide-padding: clamp(1rem, 4vw, 4rem);
+      --content-gap: clamp(0.5rem, 2vw, 2rem);
+      --element-gap: clamp(0.25rem, 0.8vw, 0.75rem);
+
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration-normal: 0.6s;
+    }
+
+    /* ===========================================
+       VIEWPORT BASE
+       =========================================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow-x: hidden;
+    }
+
+    html {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text);
+    }
+
+    /* ===========================================
+       SLIDE STRUCTURE
+       =========================================== */
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: clamp(0.75rem, 3vw, 2rem);
+    }
+
+    .notebook-page {
+      width: 100%;
+      height: 100%;
+      max-width: min(92vw, 1100px);
+      max-height: min(88vh, 780px);
+      background: var(--paper);
+      border-radius: clamp(4px, 0.6vw, 8px);
+      box-shadow: 0 clamp(4px, 1vw, 12px) clamp(12px, 3vw, 40px) var(--paper-shadow);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: var(--slide-padding);
+      padding-left: calc(var(--slide-padding) + clamp(1.5rem, 3vw, 3rem));
+    }
+
+    /* Subtle ruled lines */
+    .notebook-page::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        transparent,
+        transparent calc(clamp(1.2rem, 2vw, 1.6rem) * 1.4),
+        rgba(200, 190, 180, 0.25) calc(clamp(1.2rem, 2vw, 1.6rem) * 1.4),
+        rgba(200, 190, 180, 0.25) calc(clamp(1.2rem, 2vw, 1.6rem) * 1.4 + 1px)
+      );
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    /* Binder rings */
+    .ring {
+      position: absolute;
+      left: calc(-1 * clamp(6px, 0.8vw, 10px));
+      width: clamp(14px, 1.8vw, 22px);
+      height: clamp(14px, 1.8vw, 22px);
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, var(--ring-light), var(--ring) 65%);
+      box-shadow:
+        inset 0 1px 2px rgba(255,255,255,0.4),
+        0 clamp(1px, 0.2vw, 3px) clamp(2px, 0.4vw, 6px) rgba(0,0,0,0.25);
+      z-index: 2;
+    }
+    .ring::after {
+      content: '';
+      position: absolute;
+      inset: clamp(3px, 0.4vw, 5px);
+      border-radius: 50%;
+      background: var(--bg-dark);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .ring:nth-child(1) { top: clamp(12%, 15%, 18%); }
+    .ring:nth-child(2) { top: clamp(44%, 47%, 50%); }
+    .ring:nth-child(3) { top: clamp(74%, 77%, 80%); }
+
+    /* Page tab labels */
+    .page-tab {
+      position: absolute;
+      right: 0;
+      top: clamp(1.5rem, 3vw, 3rem);
+      padding: clamp(3px, 0.3vw, 5px) clamp(10px, 1.2vw, 18px);
+      border-radius: 0 clamp(3px, 0.3vw, 5px) clamp(3px, 0.3vw, 5px) 0;
+      font-family: var(--font-body);
+      font-size: var(--tab-size);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    /* ===========================================
+       SLIDE CONTENT
+       =========================================== */
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-height: 100%;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+      gap: var(--content-gap);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: var(--title-size);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text);
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: var(--h2-size);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--text);
+    }
+
+    h3 {
+      font-family: var(--font-body);
+      font-size: var(--h3-size);
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text);
+    }
+
+    p, li {
+      font-size: var(--body-size);
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    .subtitle {
+      font-family: var(--font-display);
+      font-size: clamp(0.9rem, 1.8vw, 1.3rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .tagline {
+      font-size: var(--small-size);
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .meta {
+      margin-top: auto;
+      font-size: var(--small-size);
+      color: var(--text-muted);
+    }
+
+    /* ===========================================
+       CARDS
+       =========================================== */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+      gap: clamp(0.4rem, 1vw, 0.8rem);
+    }
+
+    .card-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(0.4rem, 1vw, 0.8rem);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: clamp(4px, 0.5vw, 8px);
+      padding: clamp(0.5rem, 1vw, 1rem) clamp(0.6rem, 1.2vw, 1.2rem);
+      border-left: clamp(3px, 0.4vw, 5px) solid var(--card-color, var(--tab-mint));
+      display: flex;
+      flex-direction: column;
+      gap: clamp(2px, 0.3vw, 4px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .card-letter {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      font-weight: 700;
+      color: var(--card-color);
+      line-height: 1;
+    }
+
+    .card-label {
+      font-family: var(--font-body);
+      font-size: clamp(0.7rem, 1.1vw, 0.9rem);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .card-desc {
+      font-size: clamp(0.6rem, 0.9vw, 0.78rem);
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .card-question {
+      font-size: clamp(0.55rem, 0.8vw, 0.72rem);
+      color: var(--accent-dark);
+      font-style: italic;
+      line-height: 1.3;
+      margin-top: auto;
+    }
+
+    /* ===========================================
+       BEFORE / AFTER COMPARISON
+       =========================================== */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(0.8rem, 2vw, 1.5rem);
+      width: 100%;
+    }
+
+    .compare-card {
+      border-radius: clamp(4px, 0.5vw, 8px);
+      padding: clamp(0.6rem, 1.2vw, 1.2rem);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.3rem, 0.5vw, 0.6rem);
+    }
+
+    .compare-card.before {
+      background: rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .compare-card.after {
+      background: rgba(184, 224, 204, 0.2);
+      border: 1px solid var(--tab-mint);
+    }
+
+    .compare-label {
+      font-size: var(--tab-size);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .compare-card.before .compare-label { color: var(--text-muted); }
+    .compare-card.after .compare-label { color: #4a8a6a; }
+    .before-prompt {
+      font-family: var(--font-body);
+      font-size: clamp(0.75rem, 1.2vw, 1rem);
+      color: var(--text-muted);
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    .after-prompt {
+      font-family: var(--font-body);
+      font-size: clamp(0.75rem, 1.2vw, 1rem);
+      line-height: 1.6;
+    }
+
+    .after-prompt strong {
+      color: var(--accent-dark);
+    }
+
+    .after-note {
+      font-size: var(--small-size);
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ===========================================
+       CHECKLIST
+       =========================================== */
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.3rem, 0.6vw, 0.6rem);
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: clamp(0.4rem, 0.8vw, 0.8rem);
+      font-size: var(--body-size);
+      line-height: 1.4;
+    }
+
+    .check-marker {
+      flex-shrink: 0;
+      width: clamp(14px, 1.5vw, 20px);
+      height: clamp(14px, 1.5vw, 20px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(8px, 0.8vw, 12px);
+      font-weight: 700;
+      margin-top: clamp(2px, 0.2vw, 3px);
+    }
+
+    .check-marker.done { background: var(--tab-mint); color: #2a5a3a; }
+    .check-marker.write { background: var(--tab-peach); color: #7a4a2a; }
+
+    .check-label { font-weight: 600; }
+
+    /* ===========================================
+       TWO COLUMN LAYOUT
+       =========================================== */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(0.8rem, 2vw, 1.5rem);
+    }
+
+    .col-section {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.4rem, 0.8vw, 0.8rem);
+    }
+
+    .col-heading {
+      font-size: clamp(0.75rem, 1.2vw, 1rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding-bottom: clamp(3px, 0.3vw, 5px);
+      border-bottom: 2px solid;
+    }
+
+    .col-heading.docs { color: var(--accent-dark); border-color: var(--tab-mint); }
+    .col-heading.you { color: var(--accent-dark); border-color: var(--tab-peach); }
+
+    .col-item {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.3rem, 0.6vw, 0.6rem);
+    }
+
+    .col-marker {
+      width: clamp(6px, 0.6vw, 10px);
+      height: clamp(6px, 0.6vw, 10px);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .col-marker.docs { background: var(--tab-mint); }
+    .col-marker.you { background: var(--tab-peach); }
+
+    .result-highlight {
+      margin-top: auto;
+      padding: clamp(0.5rem, 1vw, 1rem);
+      background: rgba(184, 224, 204, 0.15);
+      border-radius: clamp(4px, 0.4vw, 6px);
+      border: 1px solid var(--tab-mint);
+      text-align: center;
+      font-size: clamp(0.75rem, 1.3vw, 1.1rem);
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* ===========================================
+       REFERENCE LIST
+       =========================================== */
+    .ref-list {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.25rem, 0.5vw, 0.5rem);
+    }
+
+    .ref-item {
+      font-size: clamp(0.65rem, 1vw, 0.85rem);
+      line-height: 1.4;
+      color: var(--text);
+    }
+
+    .ref-item a {
+      color: var(--accent-dark);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .ref-item a:hover {
+      color: var(--text);
+    }
+
+    /* ===========================================
+       ANIMATIONS
+       =========================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition:
+        opacity var(--duration-normal) var(--ease-out-expo),
+        transform var(--duration-normal) var(--ease-out-expo);
+    }
+
+    .slide.visible .reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal:nth-child(1) { transition-delay: 0.05s; }
+    .reveal:nth-child(2) { transition-delay: 0.12s; }
+    .reveal:nth-child(3) { transition-delay: 0.19s; }
+    .reveal:nth-child(4) { transition-delay: 0.26s; }
+    .reveal:nth-child(5) { transition-delay: 0.33s; }
+    .reveal:nth-child(6) { transition-delay: 0.40s; }
+    .reveal:nth-child(7) { transition-delay: 0.47s; }
+    .reveal:nth-child(8) { transition-delay: 0.54s; }
+
+    .reveal-card {
+      opacity: 0;
+      transform: translateY(15px) scale(0.97);
+      transition:
+        opacity 0.5s var(--ease-out-expo),
+        transform 0.5s var(--ease-out-expo);
+    }
+    .slide.visible .reveal-card {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .reveal-card:nth-child(1) { transition-delay: 0.08s; }
+    .reveal-card:nth-child(2) { transition-delay: 0.16s; }
+    .reveal-card:nth-child(3) { transition-delay: 0.24s; }
+    .reveal-card:nth-child(4) { transition-delay: 0.32s; }
+    .reveal-card:nth-child(5) { transition-delay: 0.40s; }
+    .reveal-card:nth-child(6) { transition-delay: 0.48s; }
+
+    /* ===========================================
+       PROGRESS BAR
+       =========================================== */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: clamp(2px, 0.3vw, 4px);
+      background: linear-gradient(90deg, var(--accent-dark), var(--tab-mint));
+      z-index: 1000;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    /* ===========================================
+       NAV DOTS
+       =========================================== */
+    .nav-dots {
+      position: fixed;
+      right: clamp(0.5rem, 1.5vw, 1.5rem);
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(4px, 0.5vw, 8px);
+      z-index: 100;
+      background: rgba(26, 26, 46, 0.6);
+      backdrop-filter: blur(8px);
+      padding: clamp(6px, 0.6vw, 10px);
+      border-radius: clamp(8px, 1vw, 12px);
+    }
+
+    .nav-dot {
+      width: clamp(6px, 0.7vw, 10px);
+      height: clamp(6px, 0.7vw, 10px);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+      padding: 0;
+    }
+
+    .nav-dot.active {
+      background: var(--tab-mint);
+      transform: scale(1.3);
+    }
+
+    .nav-dot:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .keyboard-hint {
+      position: fixed;
+      bottom: clamp(0.5rem, 1.5vw, 1.5rem);
+      right: clamp(0.5rem, 1.5vw, 1.5rem);
+      font-size: clamp(0.5rem, 0.7vw, 0.7rem);
+      color: rgba(255, 255, 255, 0.3);
+      z-index: 100;
+      font-family: var(--font-body);
+      letter-spacing: 0.05em;
+    }
+
+    /* ===========================================
+       RESPONSIVE
+       =========================================== */
+    @media (max-height: 700px) {
+      :root {
+        --slide-padding: clamp(0.75rem, 3vw, 1.5rem);
+        --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+        --title-size: clamp(1.4rem, 4.5vw, 2.5rem);
+        --h2-size: clamp(1.1rem, 3vw, 1.75rem);
+        --body-size: clamp(0.7rem, 1.2vw, 0.9rem);
+      }
+      .notebook-page {
+        max-height: min(92vh, 800px);
+      }
+    }
+
+    @media (max-height: 600px) {
+      :root {
+        --slide-padding: clamp(0.5rem, 2.5vw, 1.2rem);
+        --content-gap: clamp(0.3rem, 1vw, 0.6rem);
+        --title-size: clamp(1.2rem, 4vw, 2rem);
+        --h2-size: clamp(1rem, 2.5vw, 1.5rem);
+        --body-size: clamp(0.65rem, 1.1vw, 0.85rem);
+      }
+      .nav-dots, .keyboard-hint { display: none; }
+      .notebook-page { max-height: 95vh; }
+    }
+
+    @media (max-height: 500px) {
+      :root {
+        --slide-padding: clamp(0.4rem, 2vw, 0.8rem);
+        --title-size: clamp(1rem, 3.5vw, 1.5rem);
+        --h2-size: clamp(0.85rem, 2.5vw, 1.2rem);
+        --body-size: clamp(0.6rem, 1vw, 0.78rem);
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root {
+        --title-size: clamp(1.4rem, 7vw, 2.2rem);
+      }
+      .card-grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+      .notebook-page {
+        max-width: 98vw;
+        padding-left: var(--slide-padding);
+      }
+      .ring { display: none; }
+    }
+
+    @media (max-width: 400px) {
+      .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+  <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+  <div class="keyboard-hint">&#8592; &#8594; navigate</div>
+
+  <!-- ============================================
+       SLIDE 1: TITLE
+       ============================================ -->
+  <section class="slide title-slide" data-index="0">
+    <div class="notebook-page">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="page-tab" style="background:var(--tab-gold);">Tutorial</div>
+      <div class="slide-content">
+        <p class="tagline reveal">Prompt Engineering · CO-STAR · PROMPT Framework</p>
+        <h1 class="reveal">Good Prompting</h1>
+        <p class="subtitle reveal">A tutorial on writing effective prompts for AI agents</p>
+        <p class="meta reveal">How project documentation already gives you most of the pieces</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 2: CO-STAR
+       ============================================ -->
+  <section class="slide" data-index="1">
+    <div class="notebook-page">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="page-tab" style="background:var(--tab-sky);">Framework</div>
+      <div class="slide-content">
+        <h2 class="reveal">What Makes a Good Prompt?</h2>
+        <p class="reveal" style="font-size:var(--body-size);color:var(--text-muted);">
+          The <strong style="color:var(--text);font-weight:600;">CO-STAR</strong> framework &mdash; six components for structured prompts.
+        </p>
+        <div class="card-grid reveal" style="margin-top:0;">
+          <div class="card" style="--card-color:var(--tab-pink);">
+            <span class="card-letter">C</span>
+            <span class="card-label">Context</span>
+            <span class="card-desc">Background, situation, constraints</span>
+          </div>
+          <div class="card" style="--card-color:var(--tab-peach);">
+            <span class="card-letter">O</span>
+            <span class="card-label">Objective</span>
+            <span class="card-desc">The specific task or goal</span>
+          </div>
+          <div class="card" style="--card-color:var(--tab-gold);">
+            <span class="card-letter">S</span>
+            <span class="card-label">Style</span>
+            <span class="card-desc">Structural approach &mdash; technical, conversational, etc.</span>
+          </div>
+          <div class="card" style="--card-color:var(--tab-mint);">
+            <span class="card-letter">T</span>
+            <span class="card-label">Tone</span>
+            <span class="card-desc">Emotional quality &mdash; formal, urgent, encouraging</span>
+          </div>
+          <div class="card" style="--card-color:var(--tab-lavender);">
+            <span class="card-letter">A</span>
+            <span class="card-label">Audience</span>
+            <span class="card-desc">Who will read or use the output</span>
+          </div>
+          <div class="card" style="--card-color:var(--tab-coral);">
+            <span class="card-letter">R</span>
+            <span class="card-label">Response</span>
+            <span class="card-desc">Exact format, structure, length</span>
+          </div>
+        </div>
+        <p class="reveal" style="font-size:var(--small-size);color:var(--text-muted);margin-top:calc(-1 * var(--element-gap));">
+          <strong style="font-weight:600;color:var(--accent-dark);">+E</strong> &mdash; Examples &amp; few-shot samples
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 3: GROUNDING
+       ============================================ -->
+  <section class="slide" data-index="2">
+    <div class="notebook-page">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="page-tab" style="background:var(--tab-mint);">Concept</div>
+      <div class="slide-content">
+        <h2 class="reveal">Grounding</h2>
+        <p class="reveal" style="font-size:var(--body-size);">
+          Anchors LLM outputs to verifiable, external data &mdash; documents, codebases, examples &mdash; rather than relying solely on training data.
+        </p>
+        <div class="two-col reveal" style="margin-top:var(--element-gap);">
+          <div class="col-section">
+            <h3 style="font-size:var(--h3-size);font-weight:600;">Prevents</h3>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:clamp(0.2rem,0.4vw,0.4rem);">
+              <li style="font-size:var(--body-size);">&rarr; Hallucinations</li>
+              <li style="font-size:var(--body-size);">&rarr; Vague, generic answers</li>
+              <li style="font-size:var(--body-size);">&rarr; Off-track responses</li>
+            </ul>
+          </div>
+          <div class="col-section">
+            <h3 style="font-size:var(--h3-size);font-weight:600;">Enables</h3>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:clamp(0.2rem,0.4vw,0.4rem);">
+              <li style="font-size:var(--body-size);">&rarr; Precise, actionable output</li>
+              <li style="font-size:var(--body-size);">&rarr; Data-driven decisions</li>
+              <li style="font-size:var(--body-size);">&rarr; Verifiable correctness</li>
+            </ul>
+          </div>
+        </div>
+        <p class="reveal" style="font-size:var(--small-size);color:var(--text-muted);margin-top:var(--element-gap);">
+          In CO-STAR+: <strong style="color:var(--text);">E</strong>xamples ground the output.
+          In PROMPT: <strong style="color:var(--text);">M</strong>aterial + <strong style="color:var(--text);">T</strong>est do the grounding.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 4: PROMPT FRAMEWORK
+       ============================================ -->
+  <section class="slide" data-index="3">
+    <div class="notebook-page">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="page-tab" style="background:var(--tab-lavender);">Framework</div>
+      <div class="slide-content">
+        <h2 class="reveal">The P.R.O.M.P.T. Framework</h2>
+        <p class="reveal" style="font-size:var(--body-size);color:var(--text-muted);">
+          A catchier mnemonic &mdash; same coverage as CO-STAR+ &mdash; built around the word you're already thinking about.
+        </p>
+        <div class="card-grid reveal">
+          <div class="card" style="--card-color:var(--tab-pink);">
+            <span class="card-letter">P</span>
+            <span class="card-label">Persona</span>
+            <span class="card-desc">Who is the AI acting as?</span>
+            <span class="card-question">&ldquo;Senior engineer, tutor, editor&hellip;&rdquo;</span>
+          </div>
+          <div class="card" style="--card-color:var(--tab-peach);">
+            <span class="card-letter">R</span>
+            <span class="card-label">Request</span>
+            <span class="card-desc">What exactly do you want done?</span>
+            <span class="card-question">&ldquo;Build this endpoint&hellip;&rdquo;</span>
+          </div>
+          <div class="card" style="--card-color:var(--tab-gold);">
+            <span class="card-letter">O</span>
+            <span class="card-label">Outline</span>
+            <span class="card-desc">How should the output look?</span>
+            <span class="card-question">&ldquo;DRF viewset + serializer + test&rdquo;</span>
+          </div>
+          <div class="card" style="--card-color:var(--tab-mint);">
+            <span class="card-letter">M</span>
+            <span class="card-label">Material</span>
+            <span class="card-desc">What context does the AI need?</span>
+            <span class="card-question">&ldquo;Architecture, API specs, constraints&rdquo;</span>
+          </div>
+          <div class="card" style="--card-color:var(--tab-sky);">
+            <span class="card-letter">P</span>
+            <span class="card-label">Preference</span>
+            <span class="card-desc">Style, tone, and audience level</span>
+            <span class="card-question">&ldquo;Formal? Playful? For devs or PMs?&rdquo;</span>
+          </div>
+          <div class="card" style="--card-color:var(--tab-coral);">
+            <span class="card-letter">T</span>
+            <span class="card-label">Test</span>
+            <span class="card-desc">How will you verify success?</span>
+            <span class="card-question">&ldquo;Run pytest, check assertion, compare&rdquo;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 5: DOCS FILL PROMPT
+       ============================================ -->
+  <section class="slide" data-index="4">
+    <div class="notebook-page">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="page-tab" style="background:var(--tab-gold);">Insight</div>
+      <div class="slide-content">
+        <h2 class="reveal">Docs Already Cover Most of It</h2>
+        <p class="reveal" style="font-size:var(--body-size);color:var(--text-muted);">
+          Di&aacute;taxis documentation fills 3 of 6 components. Your prompt shrinks to just 3 items.
+        </p>
+        <div class="two-col reveal">
+          <div class="col-section">
+            <div class="col-heading docs">Covered by docs</div>
+            <div class="col-item">
+              <span class="col-marker docs"></span>
+              <span><strong>P</strong>ersona &mdash; CLAUDE.md, agents/, personas/</span>
+            </div>
+            <div class="col-item">
+              <span class="col-marker docs"></span>
+              <span><strong>M</strong>aterial &mdash; explanations, references, metadata</span>
+            </div>
+            <div class="col-item">
+              <span class="col-marker docs"></span>
+              <span><strong>P</strong>reference &mdash; personas define the audience</span>
+            </div>
+          </div>
+          <div class="col-section">
+            <div class="col-heading you">You write this</div>
+            <div class="col-item">
+              <span class="col-marker you"></span>
+              <span><strong>R</strong>equest &mdash; the AI can't read your mind</span>
+            </div>
+            <div class="col-item">
+              <span class="col-marker you"></span>
+              <span><strong>O</strong>utline &mdash; every task has a different format</span>
+            </div>
+            <div class="col-item">
+              <span class="col-marker you"></span>
+              <span><strong>T</strong>est &mdash; the single highest-leverage thing</span>
+            </div>
+          </div>
+        </div>
+        <div class="result-highlight reveal">
+          Your prompt = Request + Outline + Test. Everything else is already in the docs.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 6: BEFORE & AFTER
+       ============================================ -->
+  <section class="slide" data-index="5">
+    <div class="notebook-page">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="page-tab" style="background:var(--tab-pink);">Example</div>
+      <div class="slide-content">
+        <h2 class="reveal">Before &amp; After</h2>
+        <div class="comparison reveal">
+          <div class="compare-card before">
+            <span class="compare-label">Before &mdash; vague</span>
+            <div class="before-prompt">&ldquo;Add a timer endpoint to the API.&rdquo;</div>
+            <span style="font-size:var(--small-size);color:var(--text-muted);">
+              No context, no persona, no test. The AI guesses everything.
+            </span>
+          </div>
+          <div class="compare-card after">
+            <span class="compare-label">After &mdash; structured</span>
+            <div class="after-prompt">
+              <strong>R</strong>equest: Add a <code>POST /api/timers/start</code> endpoint.<br />
+              <strong>O</strong>utline: DRF viewset + serializer + test. Follow existing patterns.<br />
+              <strong>T</strong>est: <code>pytest -k test_start_timer</code> &mdash; assert response.
+            </div>
+            <div class="after-note">
+              Persona, Material, and Preference come from CLAUDE.md &amp; project docs.
+            </div>
+          </div>
+        </div>
+        <div class="reveal" style="margin-top:var(--element-gap);padding:clamp(0.4rem,0.8vw,0.8rem);background:rgba(0,0,0,0.03);border-radius:6px;">
+          <p style="font-size:var(--small-size);color:var(--text-muted);text-align:center;">
+            Once trust is built, you can drop the Outline too:
+            <em style="color:var(--text);">&ldquo;Add a <code>POST /api/timers/start</code> endpoint. Write a test and verify it passes.&rdquo;</em>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 7: PUTTING IT ALL TOGETHER
+       ============================================ -->
+  <section class="slide" data-index="6">
+    <div class="notebook-page">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="page-tab" style="background:var(--tab-mint);">Guide</div>
+      <div class="slide-content">
+        <h2 class="reveal">Putting It All Together</h2>
+        <div class="two-col reveal">
+          <div class="col-section">
+            <h3 style="font-size:var(--h3-size);font-weight:600;">For this project</h3>
+            <div class="checklist">
+              <div class="check-item">
+                <span class="check-marker done">&#10003;</span>
+                <div><span class="check-label">Check the docs</span><br /><span style="font-size:var(--small-size);color:var(--text-muted);">CLAUDE.md, relevant docs/ section</span></div>
+              </div>
+              <div class="check-item">
+                <span class="check-marker write">R</span>
+                <div><span class="check-label">State the Request</span><br /><span style="font-size:var(--small-size);color:var(--text-muted);">The one thing the AI cannot guess</span></div>
+              </div>
+              <div class="check-item">
+                <span class="check-marker write">O</span>
+                <div><span class="check-label">Specify the Outline</span><br /><span style="font-size:var(--small-size);color:var(--text-muted);">If format isn't obvious from context</span></div>
+              </div>
+              <div class="check-item">
+                <span class="check-marker write">T</span>
+                <div><span class="check-label">Always include a Test</span><br /><span style="font-size:var(--small-size);color:var(--text-muted);">A command, assertion, or comparison</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-section">
+            <h3 style="font-size:var(--h3-size);font-weight:600;">For any project</h3>
+            <div class="checklist">
+              <div class="check-item">
+                <span class="check-marker done">P</span>
+                <div><span class="check-label">Persona</span> &mdash; role for the AI</div>
+              </div>
+              <div class="check-item">
+                <span class="check-marker write">R</span>
+                <div><span class="check-label">Request</span> &mdash; what to do</div>
+              </div>
+              <div class="check-item">
+                <span class="check-marker write">O</span>
+                <div><span class="check-label">Outline</span> &mdash; output format</div>
+              </div>
+              <div class="check-item">
+                <span class="check-marker done">M</span>
+                <div><span class="check-label">Material</span> &mdash; context &amp; constraints</div>
+              </div>
+              <div class="check-item">
+                <span class="check-marker done">P</span>
+                <div><span class="check-label">Preference</span> &mdash; style, tone, audience</div>
+              </div>
+              <div class="check-item">
+                <span class="check-marker write">T</span>
+                <div><span class="check-label">Test</span> &mdash; verification criteria</div>
+              </div>
+            </div>
+            <p style="font-size:var(--small-size);color:var(--text-muted);margin-top:auto;">
+              Skip any component the project&rsquo;s docs already provide.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 8: REFERENCES & CLOSING
+       ============================================ -->
+  <section class="slide" data-index="7">
+    <div class="notebook-page">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="page-tab" style="background:var(--tab-sky);">References</div>
+      <div class="slide-content">
+        <h2 class="reveal">References &amp; Next Steps</h2>
+        <div class="two-col reveal">
+          <div class="col-section">
+            <h3 style="font-size:var(--h3-size);font-weight:600;">References</h3>
+            <div class="ref-list">
+              <div class="ref-item">
+                Teo, S. (2023). <em>How I Won Singapore's GPT-4 Prompt Engineering Competition.</em><br />
+                <a href="https://towardsdatascience.com/how-i-won-singapores-gpt-4-prompt-engineering-competition-34c195a93d41" target="_blank">Towards Data Science</a>
+              </div>
+              <div class="ref-item">
+                <em>Di&aacute;taxis: A systematic approach to technical documentation authoring.</em><br />
+                <a href="https://diataxis.fr/" target="_blank">diataxis.fr</a>
+              </div>
+              <div class="ref-item">
+                <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank">Anthropic's Prompting Best Practices</a>
+              </div>
+              <div class="ref-item">
+                <a href="https://github.com/parallelhours/kindle-scribe-generator" target="_blank">Kindle Scribe Notebook Generator</a>
+                &mdash; printable PROMPT/CO-STAR templates
+              </div>
+            </div>
+          </div>
+          <div class="col-section">
+            <h3 style="font-size:var(--h3-size);font-weight:600;">Next Steps</h3>
+            <div class="ref-list">
+              <div class="ref-item"><a href="../03-howto/effective-prompts.md">How-to: Write Effective Prompts</a></div>
+              <div class="ref-item">Read <code>CLAUDE.md</code> for project conventions</div>
+              <div class="ref-item">Browse <code>docs/13-personas/</code> for audience archetypes</div>
+              <div class="ref-item">Browse <code>docs/12-metadata/</code> for project context</div>
+            </div>
+            <div style="margin-top:auto;padding-top:var(--element-gap);border-top:1px solid rgba(0,0,0,0.08);">
+              <p style="font-size:var(--small-size);color:var(--text-muted);">
+                Written by <strong style="color:var(--text);">Paul B. Monday</strong> &middot;
+                <a href="https://parallelhours.io" style="color:var(--accent-dark);">parallelhours.io</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    /* ===========================================
+       SLIDE PRESENTATION CONTROLLER
+       =========================================== */
+    class SlidePresentation {
+      constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.navDotsContainer = document.getElementById('navDots');
+        this.progressBar = document.getElementById('progressBar');
+        this.currentIndex = 0;
+
+        this.setupObserver();
+        this.setupNavDots();
+        this.setupKeyboard();
+        this.setupTouch();
+        this.setupWheel();
+        this.update(0);
+      }
+
+      setupObserver() {
+        const options = { threshold: 0.3, rootMargin: '0px' };
+        this.observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            const idx = parseInt(entry.target.dataset.index);
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              this.currentIndex = idx;
+              this.updateProgress();
+              this.updateDots();
+            }
+          });
+        }, options);
+
+        this.slides.forEach(slide => this.observer.observe(slide));
+
+        // Also mark first slide visible immediately
+        if (this.slides.length > 0) this.slides[0].classList.add('visible');
+      }
+
+      setupNavDots() {
+        this.navDotsContainer.innerHTML = '';
+        this.slides.forEach((_, i) => {
+          const dot = document.createElement('button');
+          dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+          dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+          dot.addEventListener('click', () => this.goTo(i));
+          this.navDotsContainer.appendChild(dot);
+        });
+      }
+
+      setupKeyboard() {
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            this.goTo(this.currentIndex + 1);
+          } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            this.goTo(this.currentIndex - 1);
+          } else if (e.key === 'Home') {
+            e.preventDefault();
+            this.goTo(0);
+          } else if (e.key === 'End') {
+            e.preventDefault();
+            this.goTo(this.slides.length - 1);
+          }
+        });
+      }
+
+      setupTouch() {
+        let startX = 0;
+        let startY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+          startX = e.changedTouches[0].screenX;
+          startY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+          const dx = e.changedTouches[0].screenX - startX;
+          const dy = e.changedTouches[0].screenY - startY;
+          const absDx = Math.abs(dx);
+          const absDy = Math.abs(dy);
+
+          if (Math.max(absDx, absDy) > 40) {
+            if (absDx > absDy) {
+              if (dx < 0) this.goTo(this.currentIndex + 1);
+              else this.goTo(this.currentIndex - 1);
+            } else {
+              if (dy < 0) this.goTo(this.currentIndex + 1);
+              else this.goTo(this.currentIndex - 1);
+            }
+          }
+        }, { passive: true });
+      }
+
+      setupWheel() {
+        let ticking = false;
+        document.addEventListener('wheel', (e) => {
+          if (!ticking) {
+            window.requestAnimationFrame(() => {
+              if (Math.abs(e.deltaY) > 20) {
+                if (e.deltaY > 0) this.goTo(this.currentIndex + 1);
+                else this.goTo(this.currentIndex - 1);
+              }
+              ticking = false;
+            });
+            ticking = true;
+          }
+        }, { passive: true });
+      }
+
+      goTo(index) {
+        this.currentIndex = Math.max(0, Math.min(index, this.slides.length - 1));
+        this.slides[this.currentIndex].scrollIntoView({ behavior: 'smooth' });
+        this.updateProgress();
+        this.updateDots();
+      }
+
+      update(activeIndex) {
+        this.currentIndex = activeIndex;
+        this.updateProgress();
+        this.updateDots();
+      }
+
+      updateProgress() {
+        const pct = ((this.currentIndex) / (this.slides.length - 1)) * 100;
+        this.progressBar.style.width = pct + '%';
+      }
+
+      updateDots() {
+        const dots = this.navDotsContainer.querySelectorAll('.nav-dot');
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === this.currentIndex);
+        });
+      }
+    }
+
+    new SlidePresentation();
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+project:
+  name: "parallel-powers"
+  description: "Human-in-the-loop framework for agentic-assisted product definition through product delivery"
+  repository: ""
+  language: "Python"
+  framework: "none"
+  created: "2026-05-07"
+
+issue-tracking:
+  provider: github
+  repository: ""
+  project-key: ""
+  issue-labels:
+    story-points-prefix: "story-points-"
+    status-prefix: "status-"
+    scope-prefix: "scope-"
+    human-estimate-prefix: "human-estimate-hours-"
+    ai-estimate-prefix: "ai-estimate-hours-"

@@ -1,0 +1,61 @@
+{
+  "id": "parallelhours",
+  "name": "Parallel Hours",
+  "description": "Time tracking and KPI management via parallelhours.io",
+  "replacements": [
+    {
+      "placeholder": "TKPI_PAT",
+      "prompt": "Personal Access Token for parallelhours.io",
+      "secret": true,
+      "default": ""
+    },
+    {
+      "placeholder": "TKPI_PROJECT",
+      "prompt": "Default project key (e.g. MYPROJ)",
+      "secret": false,
+      "default": ""
+    }
+  ],
+  "default_env": {
+    "TKPI_BASE_URL": "https://parallelhours.io"
+  },
+  "agents": {
+    "claude": {
+      "config_file": ".mcp.json",
+      "entry": {
+        "mcpServers": {
+          "parallelhours": {
+            "command": "uvx",
+            "args": ["parallelhours-mcp"],
+            "env": {
+              "TKPI_PAT": "${TKPI_PAT}",
+              "TKPI_BASE_URL": "${TKPI_BASE_URL}",
+              "TKPI_PROJECT": "${TKPI_PROJECT}"
+            }
+          }
+        }
+      }
+    },
+    "opencode": {
+      "config_file": "opencode.jsonc",
+      "entry": {
+        "mcp": {
+          "parallelhours": {
+            "type": "local",
+            "command": ["uvx", "parallelhours-mcp"],
+            "enabled": true,
+            "environment": {
+              "TKPI_PAT": "${TKPI_PAT}",
+              "TKPI_BASE_URL": "${TKPI_BASE_URL}",
+              "TKPI_PROJECT": "${TKPI_PROJECT}"
+            }
+          }
+        }
+      }
+    }
+  },
+  "global_paths": {
+    "claude": "~/.claude/.mcp.json",
+    "opencode": "~/.config/opencode/opencode.jsonc"
+  }
+}

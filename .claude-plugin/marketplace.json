@@ -1,0 +1,25 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "parallel-powers",
+  "description": "Time tracking and session management powers for agentic development workflows",
+  "owner": {
+    "name": "Paul Monday",
+    "email": "support@parallelhours.io"
+  },
+  "plugins": [
+    {
+      "name": "parallel-powers",
+      "description": "Time tracking and session management powers for agentic development workflows. Track development time, log AI usage, and manage GitHub issues — all from within your coding agent.",
+      "author": {
+        "name": "Paul Monday"
+      },
+      "category": "productivity",
+      "source": {
+        "source": "url",
+        "url": "git@github.com:parallelhours/powers.git",
+        "ref": "main"
+      },
+      "homepage": "https://github.com/parallelhours/powers"
+    }
+  ]
+}
