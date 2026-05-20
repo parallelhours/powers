@@ -7,6 +7,9 @@ tags: [tutorial, learning, getting-started]
 audience: [developers, agents]
 status: published
 version: 0.1.0
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # Tutorials

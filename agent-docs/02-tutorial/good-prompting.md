@@ -14,6 +14,9 @@ extends: base
 duration: 15m
 prerequisites: []
 outcomes: [understand-costar, use-prompt-framework, leverage-docs-for-prompting]
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # Tutorial: Good Prompting

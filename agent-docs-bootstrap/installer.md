@@ -7,6 +7,9 @@ tags: [setup, bootstrap, installer, initialization]
 audience: [agents]
 status: active
 version: 1.0.0
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # Docs Kit Installer

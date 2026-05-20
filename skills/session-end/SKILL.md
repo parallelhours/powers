@@ -2,11 +2,13 @@
 name: session-end
 description: End the current tracked development session. Stops the active timer, logs AI usage, pushes the branch, and transitions the task to the appropriate status.
 disable-model-invocation: true
-license: MIT
+license: "PolyForm Noncommercial 1.0.0"
 compatibility: claude, opencode
 metadata:
   plugin: parallel-powers
   type: command
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+
 ---
 
 End the current tracked development session. Stops the active timer, logs AI usage, pushes the branch, waits for CI, and transitions the task to the appropriate status.

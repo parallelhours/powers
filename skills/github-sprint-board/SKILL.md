@@ -4,7 +4,7 @@ description: >
   Display a real-time sprint board from GitHub issues organized by status (not-started,
   in-progress, blocked, review, done). Shows story points, assignees, priorities, and
   scope indicators. Updates instantly from current issue state.
-license: MIT
+license: "PolyForm Noncommercial 1.0.0"
 compatibility: claude, opencode
 metadata:
   plugin: parallel-powers
@@ -12,6 +12,8 @@ metadata:
   requires:
     - github-cli
     - jq
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+
 ---
 
 The Sprint Board skill displays a Kanban-style board of sprint issues grouped by workflow status. Given a sprint (milestone) or time window, it provides real-time visibility into what's being worked on, blocked items, and completion status.

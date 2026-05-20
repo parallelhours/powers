@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 Parallel Hours LLC — PolyForm Noncommercial 1.0.0
 import json
 import os
 import sys

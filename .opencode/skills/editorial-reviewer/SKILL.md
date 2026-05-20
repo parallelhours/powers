@@ -5,11 +5,13 @@ description: >
   prose — through the lens of the Editorial Reviewer persona (Emery). Flags inclusive
   language issues, performs sentiment and emotion analysis, and recommends how to move
   content to a target tone.
-license: MIT
+license: "PolyForm Noncommercial 1.0.0"
 compatibility: opencode
 metadata:
   plugin: parallel-powers
   type: command
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+
 ---
 
 The Editorial Reviewer skill embeds **Emery** — a 10+ year editorial reviewer persona whose specialty is catching what automated checks miss: phrasing that alienates, assumptions that don't hold across backgrounds, examples drawn from too narrow an experience, and language that accidentally excludes.

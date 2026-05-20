@@ -7,6 +7,9 @@ tags: [persona, product-marketing, product-management, prd, requirements]
 audience: [agents]
 status: draft
 version: 0.1.0
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # Persona: Product Marketing

@@ -1,3 +1,4 @@
+// Copyright (c) 2026 Parallel Hours LLC — PolyForm Noncommercial 1.0.0
 export const ParallelPowersPlugin = async ({ project, client, $, directory, worktree }) => {
   const TKPI_PAT = process.env.TKPI_PAT || "";
   const BASE_URL = (process.env.TKPI_BASE_URL || "https://parallelhours.io").replace(/\/+$/, "");

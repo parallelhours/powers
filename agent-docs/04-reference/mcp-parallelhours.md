@@ -8,6 +8,9 @@ audience: [developers, operators, agents]
 status: draft
 version: 0.1.0
 applies-to: [mcp-framework, parallelhours]
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # Parallel Hours MCP

@@ -7,6 +7,9 @@ tags: [tutorial, editorial-reviewer, inclusive-language, sentiment, ai-assisted,
 audience: [users, humans]
 status: published
 version: 1.0.0
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # The Editorial Review I Didn't Know I Needed

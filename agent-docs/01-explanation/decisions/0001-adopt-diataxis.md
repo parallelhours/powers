@@ -8,6 +8,9 @@ audience: [architects, developers, agents]
 status: draft
 version: 0.1.0
 concepts: [diataxis, documentation-framework]
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # ADR-0001: Adopt the Diátaxis Documentation Framework

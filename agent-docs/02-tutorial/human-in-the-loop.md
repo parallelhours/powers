@@ -11,6 +11,9 @@ extends: base
 duration: 30m
 prerequisites: [getting-started, good-prompting]
 outcomes: [understand-hitl-cadence, shrink-process-to-fit, apply-persona-workflow, structure-ai-assisted-sprints, conduct-sprint-reviews]
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # Tutorial: AI-Assisted Project Development — Human in the Loop

@@ -1,11 +1,13 @@
 ---
 name: session-start
 description: Start a tracked development session for a GitHub issue. Verifies git state, creates or finds the matching parallelhours task, transitions it to in_progress, and starts a timer.
-license: MIT
+license: "PolyForm Noncommercial 1.0.0"
 compatibility: opencode
 metadata:
   plugin: parallel-powers
   type: command
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+
 ---
 
 Start a tracked development session for a GitHub issue. Verifies git state, creates (or finds) the matching parallelhours task, transitions it to in_progress, and starts a timer.

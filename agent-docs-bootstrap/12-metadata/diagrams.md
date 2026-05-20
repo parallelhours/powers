@@ -7,6 +7,9 @@ tags: [diagrams, mermaid, ascii, documentation]
 audience: [agents, humans]
 status: active
 version: 1.0.0
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # Diagram Conventions

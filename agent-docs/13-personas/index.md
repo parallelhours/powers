@@ -7,6 +7,9 @@ tags: [personas, users, roles]
 audience: [agents, humans]
 status: draft
 version: 0.1.0
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # User Personas

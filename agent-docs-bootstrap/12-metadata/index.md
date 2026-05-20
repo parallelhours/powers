@@ -7,6 +7,9 @@ tags: [metadata, conventions, frontmatter, yaml]
 audience: [agents, humans]
 status: active
 version: 1.0.0
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # Machine-Readable Metadata

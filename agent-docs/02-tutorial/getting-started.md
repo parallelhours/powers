@@ -10,6 +10,9 @@ version: 0.1.0
 duration: 15m
 prerequisites: []
 outcomes: [Initialize agent-docs, Create CLAUDE.md, Set up project metadata]
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # Getting Started with parallel-powers

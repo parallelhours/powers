@@ -1,4 +1,5 @@
 #!/bin/bash
+# Copyright (c) 2026 Parallel Hours LLC — PolyForm Noncommercial 1.0.0
 
 INPUT=$(cat)
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')

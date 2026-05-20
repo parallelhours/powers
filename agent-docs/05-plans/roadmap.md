@@ -10,6 +10,9 @@ version: 0.1.0
 milestone: v0.1
 priority: high
 owners: [project-manager]
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # Roadmap

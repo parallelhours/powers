@@ -7,6 +7,9 @@ tags: [frontmatter, yaml, schema]
 audience: [agents, humans]
 status: active
 version: 1.0.0
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # File Structure Conventions
@@ -27,6 +30,8 @@ tags: [tag1, tag2]           # Searchable tags
 audience: [agents, humans]   # Who this doc is for
 status: draft|review|active  # Document lifecycle status
 version: X.Y.Z               # Semantic version of this doc's content
+copyright: "Copyright (c) YYYY Owner Name"  # Legal copyright holder
+license: "License Name"      # SPDX name or PolyForm identifier
 ---
 ```
 

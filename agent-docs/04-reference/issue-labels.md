@@ -8,6 +8,9 @@ audience: [developers, agents, project-managers]
 status: draft
 version: 0.1.0
 applies-to: [projects using issue tracking]
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+license: "PolyForm Noncommercial 1.0.0"
+
 ---
 
 # Issue Label Schema

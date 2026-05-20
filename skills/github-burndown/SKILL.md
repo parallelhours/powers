@@ -4,7 +4,7 @@ description: >
   Generate a burndown chart from GitHub issues for a sprint (milestone). Shows story point
   burn rate, scope changes, velocity, and completion forecast. Requires repository with
   issue labels: story-points-*, status-*, scope-*.
-license: MIT
+license: "PolyForm Noncommercial 1.0.0"
 compatibility: claude, opencode
 metadata:
   plugin: parallel-powers
@@ -12,6 +12,8 @@ metadata:
   requires:
     - github-cli
     - jq
+copyright: "Copyright (c) 2026 Parallel Hours LLC"
+
 ---
 
 The GitHub Burndown skill generates sprint burndown charts and velocity analysis from GitHub issues. Given a milestone (sprint) identifier, it visualizes story point burn rate, identifies scope creep, and forecasts sprint completion.
