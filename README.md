@@ -12,7 +12,7 @@ The `agent-docs-bootstrap/` directory is a template for initializing the [Diáta
 
 ### Plugin — Session Management Powers
 
-The repo is a **Claude Code plugin** (and **OpenCode plugin**) that adds session-tracking skills and automated hooks.
+The repo is a **Claude Code plugin**, **Codex plugin**, and **OpenCode plugin** that adds session-tracking skills and automated hooks.
 
 | Component | What it does |
 |-----------|-------------|
@@ -22,27 +22,31 @@ The repo is a **Claude Code plugin** (and **OpenCode plugin**) that adds session
 
 **Claude Code:**
 
-Clone and load locally:
 ```bash
-git clone git@github.com:parallelhours/powers.git
-claude --plugin-dir /path/to/powers
-```
+# From release (no clone needed):
+claude --plugin-url https://github.com/parallelhours/powers/releases/download/v1.0.0/parallel-powers.zip
 
-Or load directly from a GitHub archive URL (no clone needed):
-```bash
-claude --plugin-url https://github.com/parallelhours/powers/archive/main.zip
+# Or from a local clone:
+claude --plugin-dir /path/to/powers
 ```
 
 Skills are namespaced: `/parallel-powers:session-start`, `/parallel-powers:session-end`, `/parallel-powers:editorial-reviewer`
 
 Run `/reload-plugins` after adding new skills to the `skills/` directory.
 
+**Codex:**
+
+```bash
+codex plugin marketplace add parallelhours/powers
+```
+
+Then inside a session: `/plugin install parallel-powers`
+
+Skills are available via the `$` mention or `/skills` picker.
+
 **OpenCode:**
 
-Add to `opencode.json` — local path or remote git URL:
-```json
-{ "plugin": ["/path/to/powers"] }
-```
+Add to `opencode.json`:
 ```json
 { "plugin": ["powers@git+https://github.com/parallelhours/powers.git"] }
 ```
