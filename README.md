@@ -16,21 +16,33 @@ The repo is a **Claude Code plugin**, **Codex plugin**, and **OpenCode plugin** 
 
 | Component | What it does |
 |-----------|-------------|
-| **Skills** (`skills/`) | `/parallel-powers:session-start` and `/parallel-powers:session-end` — multi-step workflows for creating tasks, starting/stopping timers, pushing branches, and opening PRs. `/parallel-powers:editorial-reviewer` — inclusive language, clarity, and sentiment review of any target (files, URLs, or freeform text) |
+| **Skills** (`skills/`) | Multi-step workflows invoked explicitly — see full list below |
 | **Hooks** (`hooks/`) | Trigger automatically on events: warn on missing timer at startup, count prompts on each message, log tokens on stop, lint before git commit |
-| **OpenCode plugin** (`.opencode/`) | JS plugin with equivalent hook behavior, plus skills for OpenCode's `skill` tool — including `editorial-reviewer` for content review |
+| **OpenCode plugin** (`.opencode/`) | JS plugin with equivalent hook behavior, plus skills for OpenCode's `skill` tool |
+
+#### Skills (v1.1.0)
+
+| Skill | Invoke as | Description |
+|-------|-----------|-------------|
+| `session-start` | `/parallel-powers:session-start` | Start a tracked development session for a GitHub issue. Verifies git state, creates or finds the matching parallelhours task, transitions it to in_progress, and starts a timer. |
+| `session-end` | `/parallel-powers:session-end` | End the current tracked development session. Stops the active timer, logs AI usage, pushes the branch, and transitions the task to the appropriate status. |
+| `editorial-reviewer` | `/parallel-powers:editorial-reviewer` | Review any content — code comments, docs, web pages, CLI output, error messages, or prose — for inclusive language, sentiment, and tone. |
+| `github-sprint-board` | `/parallel-powers:github-sprint-board` | Display a real-time sprint board from GitHub issues organized by status (not-started, in-progress, blocked, review, done). |
+| `github-burndown` | `/parallel-powers:github-burndown` | Generate a burndown chart from GitHub issues for a sprint (milestone). Shows story point burn rate, scope changes, velocity, and completion forecast. |
+| `diataxis-install` | `/parallel-powers:diataxis-install` | Bootstrap a Diátaxis agent-docs structure for a new or undocumented project. Runs a structured interview and executes all installer phases. |
+| `diataxis-refresh` | `/parallel-powers:diataxis-refresh` | Refresh stale Diátaxis agent-docs after code changes, architectural decisions, or sprint completion. |
 
 **Claude Code:**
 
 ```bash
 # From release (no clone needed):
-claude --plugin-url https://github.com/parallelhours/powers/releases/download/v1.0.0/parallel-powers.zip
+claude --plugin-url https://github.com/parallelhours/powers/releases/download/v1.1.0/parallel-powers.zip
 
 # Or from a local clone:
 claude --plugin-dir /path/to/powers
 ```
 
-Skills are namespaced: `/parallel-powers:session-start`, `/parallel-powers:session-end`, `/parallel-powers:editorial-reviewer`
+Skills are namespaced: `/parallel-powers:<skill-name>` (e.g. `/parallel-powers:session-start`)
 
 Run `/reload-plugins` after adding new skills to the `skills/` directory.
 
