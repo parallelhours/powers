@@ -16,7 +16,8 @@ This repository is a **Claude Code plugin** (and OpenCode plugin) that provides 
 ### Layout
 
 ```
-.claude-plugin/plugin.json      # Plugin manifest (name, version, description)
+.claude-plugin/plugin.json      # Claude Code plugin manifest
+.codex-plugin/plugin.json       # Codex plugin manifest
 skills/                          # Claude Code skills (namespaced, explicitly invoked)
   session-start/SKILL.md         #   Start a tracked dev session
   session-end/SKILL.md           #   End a tracked dev session
@@ -35,11 +36,15 @@ hooks/                           # Hook scripts and configuration
 
 ### Usage
 
-**Claude Code** — load with `--plugin-dir`:
+**Claude Code** — load from release zip or local clone:
 ```bash
+# From release zip (no clone needed):
+claude --plugin-url https://github.com/parallelhours/powers/releases/download/v1.0.0/parallel-powers.zip
+
+# Or from a local clone:
 claude --plugin-dir /path/to/parallel-powers
 ```
-Skills are namespaced: `/parallel-powers:session-start`, `/parallel-powers:session-end`
+Skills are namespaced: `/parallel-powers:session-start`, `/parallel-powers:session-end`, `/parallel-powers:editorial-reviewer`
 Run `/reload-plugins` after changes.
 
 **OpenCode** — add to `opencode.json`:
