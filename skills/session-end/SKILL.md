@@ -102,7 +102,15 @@ After a successful stop, delete `.session.json` if it exists (`rm -f .session.js
 
 ---
 
-### 3b — Log AI event
+### 3b — Recompute focus score
+
+Call `get_focus_score()` (no arguments, defaults to today).
+
+This triggers a recompute of today's focus score from all TimeEntry data logged during the session, so the coaching dashboard reflects the session that just ended. Note the returned `score` and `qualifying_focus_minutes` for the report in step 7.
+
+---
+
+### 3c — Log AI event
 
 **Autonomous:**
 Call `log_ai_event` with:
@@ -164,6 +172,7 @@ Session ended
   Model:      claude-sonnet-4-6  (autonomous) / not logged  (manual, if skipped)
   Code:       +<loc_added> -<loc_deleted> LOC (or "not tracked" if unavailable)
   Speedup:    <ai_speedup_ratio>x  (or "no estimate" if task not estimated)
+  Focus:      <score>/10 (<qualifying_focus_minutes> qualifying min today)
   Status:     <new_status>
   Branch:     pushed
   PR:         <pr-url>

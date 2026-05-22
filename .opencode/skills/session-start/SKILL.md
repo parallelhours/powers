@@ -1,8 +1,9 @@
 ---
 name: session-start
 description: Start a tracked development session for a GitHub issue. Verifies git state, creates or finds the matching parallelhours task, transitions it to in_progress, and starts a timer.
+disable-model-invocation: true
 license: "PolyForm Noncommercial 1.0.0"
-compatibility: opencode
+compatibility: claude, opencode
 metadata:
   plugin: parallel-powers
   type: command
@@ -85,8 +86,13 @@ Run both checks before any GitHub or parallelhours API calls. If either results 
   - `priority`: label from `$TASK_PRIORITY` matching `priority-high` → `high`, `priority-medium` → `medium`, `priority-low` → `low` (default `medium`)
 - **milestone** → note it for context but do not store
 
-**Assign the issue to me:**
-- If the github issue is not already assigned to me, assign it now
+**Assign the issue to the current user:**
+- Get the current user's GitHub username:
+  - If `.session.json` already exists and has `github_username` field, use that cached value
+  - Otherwise, run `gh api user -q '.login'` to fetch the authenticated user's GitHub username
+- Check the `assignees` field from step 2's `gh issue view` output
+- If already assigned to the current user, skip this step
+- If not assigned, run `gh issue edit <number> --add-assignee <github_username>` to assign the issue
 
 ---
 
@@ -165,27 +171,35 @@ Write the following JSON to `.session.json` at the repo root:
   "issue_number": <N>,
   "issue_title": "<issue title>",
   "branch": "<branch-name>",
+  "github_username": "<username>",
   "started_at": "<ISO-8601 timestamp>"
 }
 ```
 
-This file lets `session-end` stop the correct timer without disambiguation, and lets subagents link their timers to this session. It is gitignored.
+This file lets `session-end` stop the correct timer without disambiguation, and lets subagents link their timers to this session. The `github_username` field caches the authenticated user's GitHub login so it doesn't need to be looked up again. It is gitignored.
 
 ---
 
-### 7 — Report
+### 7 — Report (with LOC tracking context)
 Print a clear summary:
 ```
 Session started
-  Task:    TIMEKPI-XXX — <title>
-  Issue:   #N (https://github.com/parallelhours/powers/issues/N)
-  Branch:  <branch-name>
-  Timer:   <timer_id>
-  Session: <session_id>
-  Status:  in_progress
+  Task:      TIMEKPI-XXX — <title>
+  Issue:     #N (https://github.com/parallelhours/powers/issues/N)
+  Branch:    <branch-name>
+  Timer:     <timer_id>
+  Session:   <session_id>
+  Status:    in_progress
+  LOC Track: auto-captured if in git repo (or manual input at session-end)
 
 Stop with: /parallel-powers:session-end
 ```
+
+**LOC Tracking (new in session-end):**
+- If working in a git repository, LOC is automatically captured via `git diff --numstat` when you end the session
+- If not in a git repo (or want to manually log LOC), provide `loc_added` and `loc_deleted` parameters to `/session-end`
+- LOC is attributed to either "human" or "ai_agent" based on the driver; AI Productivity metrics only count AI-generated LOC
+- Example: `/session-end done` (auto-capture LOC), or `/session-end loc_added:150 loc_deleted:30 done` (manual)
 
 ---
 
@@ -204,10 +218,17 @@ At the START of your work, call:
   → capture the returned timer_id
 
 At the END of your work, call:
-  stop_timer(timer_id=<your_timer_id>, prompt_count=<prompts you used>)
+  stop_timer(timer_id=<your_timer_id>, prompt_count=<prompts you used>, 
+             loc_added=<lines_added>, loc_deleted=<lines_deleted>)
   log_ai_event(timer_id=<your_timer_id>, prompt_count=<prompts>, mode="delegated",
                model_id="claude-sonnet-4-6", estimated_ai_min=<your elapsed minutes>,
                notes="Subagent: <what you did>")
 ```
 
-The backend supports concurrent timers — subagent timers can overlap with each other and with the main timer. The KPI engine uses interval union for wall time and treats concurrent AI work as a concurrency bonus, not double-counting.
+**LOC Tracking for Subagents (new):**
+- Include `loc_added` and `loc_deleted` in your `stop_timer` call if you generated code
+- Auto-capture works if you're in a git repo: MCP will calculate LOC from diff
+- If not in git or prefer manual logging: pass explicit LOC parameters
+- Subagent LOC is attributed as "ai_agent" driver; contributes to AI Productivity metrics
+
+The backend supports concurrent timers — subagent timers can overlap with each other and with the main timer. The KPI engine uses interval union for wall time and treats concurrent AI work as a concurrency bonus, not double-counting. Concurrent LOC contributions are summed (not deduplicated).

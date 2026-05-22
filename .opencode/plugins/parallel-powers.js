@@ -73,6 +73,7 @@ export const ParallelPowersPlugin = async ({ project, client, $, directory, work
       if (!timer) return;
       const body = {
         ai_tool: "opencode",
+        model_id: input?.session?.model || "unknown",
         mode: "delegated",
         prompt_count: 0,
         input_tokens: input?.usage?.inputTokens || 0,
@@ -88,6 +89,7 @@ export const ParallelPowersPlugin = async ({ project, client, $, directory, work
       if (!timer) return;
       const body = {
         ai_tool: "opencode",
+        model_id: input?.session?.model || "unknown",
         mode: "delegated",
         prompt_count: 0,
         input_tokens: input?.usage?.inputTokens || 0,
