@@ -1,8 +1,9 @@
 ---
 name: session-end
 description: End the current tracked development session. Stops the active timer, logs AI usage, pushes the branch, and transitions the task to the appropriate status.
+disable-model-invocation: true
 license: "PolyForm Noncommercial 1.0.0"
-compatibility: opencode
+compatibility: claude, opencode
 metadata:
   plugin: parallel-powers
   type: command
@@ -80,19 +81,36 @@ Determine mode: `"delegated"` if `estimated_ai_min` was provided and > half of `
 
 ---
 
-### 3 — Stop the timer
+### 3 — Stop the timer (with LOC capture)
 
-**Autonomous:** `stop_timer(timer_id=<timer_id>, prompt_count=0, notes="auto-logged by session-end")`
+**Autonomous:** 
+`stop_timer(timer_id=<timer_id>, prompt_count=0, notes="auto-logged by session-end", loc_added=<lines_or_null>, loc_deleted=<lines_or_null>)`
 
-**Manual:** `stop_timer(timer_id=<timer_id>, prompt_count=<count>, notes=<notes or "">)`
+**Manual:** 
+`stop_timer(timer_id=<timer_id>, prompt_count=<count>, notes=<notes or "">, loc_added=<lines_or_null>, loc_deleted=<lines_or_null>)`
 
-Note the returned `duration_minutes`.
+**LOC Parameters (new):**
+- `loc_added` — Lines of code added in this session (optional, integer, or null)
+- `loc_deleted` — Lines of code deleted/refactored in this session (optional, integer, or null)
+- When MCP is used in a git repository, LOC is auto-captured via `git diff --numstat` if not provided
+- In the web UI, LOC fields are optional manual inputs
+- Human and AI LOC are tracked separately by `driver` field; AI Productivity metrics only count AI agent LOC
+
+Note the returned `duration_minutes` and `loc_added`/`loc_deleted` confirmation.
 
 After a successful stop, delete `.session.json` if it exists (`rm -f .session.json`).
 
 ---
 
-### 3b — Log AI event
+### 3b — Recompute focus score
+
+Call `get_focus_score()` (no arguments, defaults to today).
+
+This triggers a recompute of today's focus score from all TimeEntry data logged during the session, so the coaching dashboard reflects the session that just ended. Note the returned `score` and `qualifying_focus_minutes` for the report in step 7.
+
+---
+
+### 3c — Log AI event
 
 **Autonomous:**
 Call `log_ai_event` with:
@@ -143,18 +161,26 @@ Tell the user how to check the CI (do NOT wait for the CI yourself): \
 
 ---
 
-### 7 — Report
+### 7 — Report (with AI productivity metrics)
 Print a clear summary:
 ```
 Session ended
-  Task:     TIMEKPI-XXX — <title>
-  Duration: <duration_minutes> min
-  Prompts:  auto-tracked  (or <count> if manual)
-  AI min:   <duration_minutes> min delegated  (or manual values)
-  Model:    claude-sonnet-4-6  (autonomous) / not logged  (manual, if skipped)
-  Status:   <new_status>
-  Branch:   pushed
-  PR:       <pr-url>
-  CI:       ✓ passed  (or ✗ failed — <run-url>)
+  Task:       TIMEKPI-XXX — <title>
+  Duration:   <duration_minutes> min
+  Prompts:    auto-tracked  (or <count> if manual)
+  AI min:     <duration_minutes> min delegated  (or manual values)
+  Model:      claude-sonnet-4-6  (autonomous) / not logged  (manual, if skipped)
+  Code:       +<loc_added> -<loc_deleted> LOC (or "not tracked" if unavailable)
+  Speedup:    <ai_speedup_ratio>x  (or "no estimate" if task not estimated)
+  Focus:      <score>/10 (<qualifying_focus_minutes> qualifying min today)
+  Status:     <new_status>
+  Branch:     pushed
+  PR:         <pr-url>
+  CI:         ✓ passed  (or ✗ failed — <run-url>)
 ```
+
+**New fields (AI Productivity Metrics):**
+- **Code** — Lines of code added and deleted during this session (auto-captured if MCP in git repo, or manual input). Only AI agent LOC is attributed to AI Productivity.
+- **Speedup** — Sequential AI productivity ratio (estimate ÷ wall-clock minutes). Null if task has no estimate. Shows how much faster the task completed versus the human estimate.
+
 If `status` is `done`, also show: "Task complete. Remember to merge the PR and close GitHub issue #N."
