@@ -31,8 +31,8 @@ This spec defines eight new `parallel-powers` skills that align with the Human-i
 Phase 0:  diataxis-install
 Phase 1:  requirements          → PRD
 Phase 2:  architecture          → HLD + ADRs
-Phase 2b: lld [×N components]   → component design docs
-Phase 2c: lld --finalize        → reconciled architecture + multi-persona review
+Phase 2b: component-design [×N components]   → component design docs
+Phase 2c: component-design --finalize        → reconciled architecture + multi-persona review
 Phase 3:  sprint-plan           → PM plan + sprint backlog
 Phase 4:  session-start / session-end / debug (per task)
 Phase 4↩: sprint-review [N]    → sprint review doc
@@ -47,8 +47,8 @@ Phase 5:  milestone-review [N]  → milestone review doc
 |-------|-----------|-----------|-------|-------------|
 | `requirements` | `/parallel-powers:requirements` | Taylor (Product Marketing) | 1 | `agent-docs/05-plans/prd.md` |
 | `architecture` | `/parallel-powers:architecture` | Amara (Architect) | 2 | `agent-docs/01-explanation/architecture.md` + ADRs |
-| `lld` | `/parallel-powers:lld [component]` | Amara + Wei | 2b | `agent-docs/01-explanation/components/<component>.md` |
-| `lld --finalize` | `/parallel-powers:lld --finalize` | Amara + Wei + Morgan + Taylor (opt-in) | 2c | Reconciled `architecture.md` |
+| `component-design` | `/parallel-powers:component-design [component]` | Amara + Wei | 2b | `agent-docs/01-explanation/components/<component>.md` |
+| `component-design --finalize` | `/parallel-powers:component-design --finalize` | Amara + Wei + Morgan + Taylor (opt-in) | 2c | Reconciled `architecture.md` |
 | `sprint-plan` | `/parallel-powers:sprint-plan` | Morgan + Wei | 3 | `agent-docs/05-plans/pm-plan.md` + `sprint-backlog.md` |
 | `sprint-review` | `/parallel-powers:sprint-review [N]` | Morgan + Wei | 4 end | `agent-docs/05-plans/sprint-N-review.md` |
 | `milestone-review` | `/parallel-powers:milestone-review [N]` | Morgan | 5 | `agent-docs/05-plans/milestone-N-review.md` |
@@ -160,11 +160,11 @@ Step 6 — Handoff
 
 **Frontmatter:** `labels: [architecture, hld]` for main doc; `labels: [adr, decision]` for each ADR.
 
-**Handoff:** `→ /parallel-powers:lld <first-component>` (if project has multiple components) or `→ /parallel-powers:sprint-plan` (if single-component / small project)
+**Handoff:** `→ /parallel-powers:component-design <first-component>` (if project has multiple components) or `→ /parallel-powers:sprint-plan` (if single-component / small project)
 
 ---
 
-### `lld` — Phase 2b (per component) and 2c (finalize)
+### `component-design` — Phase 2b (per component) and 2c (finalize)
 
 **Personas:**
 - Per-component: Amara (Architect) + Wei (Developer) — dual perspective
@@ -172,7 +172,7 @@ Step 6 — Handoff
 
 **Load order:** Read `agent-docs/13-personas/architect.md` first, then `agent-docs/13-personas/developer.md`. Maintain both perspectives throughout.
 
-#### Per-component mode: `/parallel-powers:lld [component-name]`
+#### Per-component mode: `/parallel-powers:component-design [component-name]`
 
 **Context check:**
 - `agent-docs/01-explanation/architecture.md` — **required**. If missing: "No HLD found. Run `/parallel-powers:architecture` first." Stop.
@@ -201,9 +201,9 @@ Step 6 — Handoff
 **End of each component run:**
 - List all completed component docs
 - Show which components from the HLD still need LLD
-- Suggest: `→ /parallel-powers:lld <next-component>` or `→ /parallel-powers:lld --finalize` when all done
+- Suggest: `→ /parallel-powers:component-design <next-component>` or `→ /parallel-powers:component-design --finalize` when all done
 
-#### Finalize mode: `/parallel-powers:lld --finalize`
+#### Finalize mode: `/parallel-powers:component-design --finalize`
 
 **Steps:**
 
@@ -235,6 +235,8 @@ Step 6 — Handoff
 ---
 
 ### `sprint-plan` — Phase 3
+
+
 
 **Personas:** Morgan (PM) + Wei (Developer)  
 Load: `agent-docs/13-personas/project-manager.md` + `agent-docs/13-personas/developer.md`
@@ -271,6 +273,13 @@ Load: `agent-docs/13-personas/project-manager.md` + `agent-docs/13-personas/deve
 | Task | Type | Points | Human hrs | AI-assisted hrs | Priority | Notes |
 ...
 ```
+
+The sprint backlog is the canonical source of truth in markdown. The skill does not push to any external system automatically — but the human can ask to export it at any time:
+- "Convert the sprint backlog to GitHub issues" → creates issues with appropriate labels and milestone
+- "Push the sprint backlog to Jira" → creates Jira tickets via the Atlassian MCP
+- "Export to Linear / Asana / Notion / ..." → use the appropriate MCP or integration
+
+This keeps the backlog portable and avoids lock-in to any particular PM tool.
 
 **Frontmatter:** `labels: [pm-plan, sprint-backlog]`.
 
@@ -419,7 +428,7 @@ Adopt the persona: use their name in responses, apply their goals and lens,
 communicate in their voice for the duration of this skill.
 ```
 
-For dual-persona skills (lld, sprint-plan, sprint-review): both persona files are read. The skill alternates perspective explicitly — e.g., "Amara notes a coherence issue..." / "Wei flags an implementability concern..."
+For dual-persona skills (component-design, sprint-plan, sprint-review): both persona files are read. The skill alternates perspective explicitly — e.g., "Amara notes a coherence issue..." / "Wei flags an implementability concern..."
 
 ---
 
