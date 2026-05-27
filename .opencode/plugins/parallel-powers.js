@@ -1,4 +1,6 @@
 // Copyright (c) 2026 Parallel Hours LLC — PolyForm Noncommercial 1.0.0
+import { spawnSync } from "child_process";
+
 export const ParallelPowersPlugin = async ({ project, client, $, directory, worktree }) => {
   const TKPI_PAT = process.env.TKPI_PAT || "";
   const BASE_URL = (process.env.TKPI_BASE_URL || "https://parallelhours.io").replace(/\/+$/, "");
@@ -65,9 +67,8 @@ export const ParallelPowersPlugin = async ({ project, client, $, directory, work
 
     "tool.execute.before": async (input, output) => {
       if (input.tool === "bash" && output.args.command?.startsWith("git commit")) {
-        const ruffArgs = { cwd: directory };
-        const proc = Bun.spawnSync([".venv/bin/ruff", "check", "src/", "tests/"], ruffArgs);
-        if (proc.exitCode !== 0) {
+        const proc = spawnSync(".venv/bin/ruff", ["check", "src/", "tests/"], { cwd: directory });
+        if (proc.status !== 0) {
           throw new Error(`ruff lint check failed (pre-commit):\n${proc.stderr.toString()}`);
         }
       }

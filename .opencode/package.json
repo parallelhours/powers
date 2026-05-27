@@ -1,0 +1,7 @@
+{
+  "name": "powers",
+  "version": "1.3.0",
+  "dependencies": {
+    "@opencode-ai/plugin": "1.14.40"
+  }
+}

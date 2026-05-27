@@ -223,5 +223,4 @@ opencode.jsonc
 .session.json
 
 # OpenCode plugin deps
-.opencode/package.json
 .opencode/node_modules/
