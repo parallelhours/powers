@@ -20,7 +20,7 @@ The repo is a **Claude Code plugin**, **Codex plugin**, and **OpenCode plugin** 
 | **Hooks** (`hooks/`) | Trigger automatically on events: warn on missing timer at startup, count prompts on each message, log tokens on stop, lint before git commit |
 | **OpenCode plugin** (`.opencode/`) | JS plugin with equivalent hook behavior, plus skills for OpenCode's `skill` tool |
 
-#### Skills (v1.2.0)
+#### Skills (v1.3.0)
 
 | Skill | Invoke as | Description |
 |-------|-----------|-------------|
@@ -32,11 +32,19 @@ The repo is a **Claude Code plugin**, **Codex plugin**, and **OpenCode plugin** 
 | `diataxis-install` | `/parallel-powers:diataxis-install` | Bootstrap a Diátaxis agent-docs structure for a new or undocumented project. Runs a structured interview and executes all installer phases. |
 | `diataxis-refresh` | `/parallel-powers:diataxis-refresh` | Refresh stale Diátaxis agent-docs after code changes, architectural decisions, or sprint completion. |
 
+The plugin auto-registers the **parallelhours MCP** on load — no separate installer needed. Set these env vars before starting your agent:
+
+| Variable | Required | Default |
+|----------|----------|---------|
+| `TKPI_PAT` | Yes | — |
+| `TKPI_BASE_URL` | No | `https://parallelhours.io` |
+| `TKPI_PROJECT` | No | — |
+
 **Claude Code:**
 
 ```bash
 # From release (no clone needed):
-claude --plugin-url https://github.com/parallelhours/powers/releases/download/v1.2.0/parallel-powers.zip
+claude --plugin-url https://github.com/parallelhours/powers/releases/download/v1.3.0/parallel-powers.zip
 
 # Or from a local clone:
 claude --plugin-dir /path/to/powers
@@ -63,25 +71,18 @@ Add to `opencode.json`:
 { "plugin": ["powers@git+https://github.com/parallelhours/powers.git"] }
 ```
 
-Requires a parallelhours API token (`TKPI_PAT`), the parallelhours base URL (`TKPI_BASE_URL`, defaults to `https://parallelhours.io`), Python 3 with httpx, the GitHub CLI (`gh`), and `jq`.
+The MCP is registered automatically via the plugin's `config` hook.
 
-### MCP Servers — Optional Tool Integration
+### MCP Servers — Advanced / Standalone Install
 
-The `mcps/` directory provides installable MCP servers managed by `mcps/installer.py`:
+The plugin registers the parallelhours MCP automatically. If you need a standalone install (e.g. without the plugin, or to pin credentials into a project `.mcp.json`), use `mcps/installer.py`:
 
-| MCP | Description |
-|-----|-------------|
-| **parallelhours** | Time tracking and KPI management via [parallelhours.io](https://parallelhours.io) — exposes tools for tasks, timers, and AI event logging |
-
-**Install an MCP:**
 ```bash
 python -m mcps.installer --mcp parallelhours --agent claude --location project
 python -m mcps.installer --mcp parallelhours --agent opencode --location project
 python -m mcps.installer --list              # list available MCPs
 python -m mcps.installer --mcp all --agent claude --location global  # install all globally
 ```
-
-Each MCP server lives in `mcps/<name>/` with an `install.json` describing agent-specific config, environment variables, and placeholder prompts (e.g., `TKPI_PAT`). The installer walks you through each credential or token and writes the resulting config to `.mcp.json` (project) or `~/.claude/.mcp.json` (global).
 
 ### agent-docs — Project Documentation
 

@@ -38,6 +38,20 @@ export const ParallelPowersPlugin = async ({ project, client, $, directory, work
   };
 
   return {
+    config: async (config) => {
+      config.mcp = config.mcp || {};
+      config.mcp.parallelhours = {
+        type: "local",
+        command: ["uvx", "parallelhours-mcp"],
+        enabled: true,
+        environment: {
+          TKPI_PAT,
+          TKPI_BASE_URL: BASE_URL,
+          TKPI_PROJECT: process.env.TKPI_PROJECT || "",
+        },
+      };
+    },
+
     "session.created": async () => {
       if (!TKPI_PAT) return;
       const timers = await apiGet("/mcp/v1/timers/active/");

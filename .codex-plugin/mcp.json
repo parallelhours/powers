@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "parallelhours": {
+      "command": "uvx",
+      "args": ["parallelhours-mcp"],
+      "env": {
+        "TKPI_PAT": "${TKPI_PAT}",
+        "TKPI_BASE_URL": "${TKPI_BASE_URL:-https://parallelhours.io}",
+        "TKPI_PROJECT": "${TKPI_PROJECT}"
+      }
+    }
+  }
+}
