@@ -1,5 +1,7 @@
 // Copyright (c) 2026 Parallel Hours LLC — PolyForm Noncommercial 1.0.0
 import { spawnSync } from "child_process";
+import { fileURLToPath } from "url";
+import { dirname, resolve } from "path";
 
 export const ParallelPowersPlugin = async ({ project, client, $, directory, worktree }) => {
   const TKPI_PAT = process.env.TKPI_PAT || "";
@@ -41,6 +43,13 @@ export const ParallelPowersPlugin = async ({ project, client, $, directory, work
 
   return {
     config: async (config) => {
+      const skillsDir = resolve(dirname(fileURLToPath(import.meta.url)), "../skills");
+      config.skills = config.skills || {};
+      config.skills.paths = config.skills.paths || [];
+      if (!config.skills.paths.includes(skillsDir)) {
+        config.skills.paths.push(skillsDir);
+      }
+
       config.mcp = config.mcp || {};
       config.mcp.parallelhours = {
         type: "local",
