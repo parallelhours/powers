@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 # Copyright (c) 2026 Parallel Hours LLC — PolyForm Noncommercial 1.0.0
-"""Stop hook — parse JSONL transcript and log token usage to the active timer.
+"""SubagentStop hook — parse subagent transcript and log token usage to the active timer.
 
-Fires when Claude Code finishes a session (Stop event). Reads the transcript
-JSONL, accumulates input/output/cache tokens scoped to the timer's start_time,
-then POSTs to log_ai_event on the matched timer.
+Fires after each Claude Code subagent finishes. The subagent has its own transcript
+file (separate from the main session), so we parse it in full with no since_iso
+filter. Tokens are logged with mode="subagent" to distinguish from the main session.
 
-Payload fields used directly (no transcript parsing needed):
-  - tool_calls: array of tool execution records → tool_call_count
+Payload fields used:
+  - transcript_path: path to the subagent's JSONL transcript
+  - session_id: shared with the main session — used to find the active timer
+  - tool_calls: array of tool execution records → tool_call_count (preferred over transcript)
   - stop_reason: end_turn / max_tokens / tool_use
   - effort: current effort level
 """
 import json
 import os
 import sys
-from datetime import datetime, timezone
 
 import httpx
 
@@ -59,14 +60,8 @@ def _find_timer(session_id: str) -> dict | None:
     return None
 
 
-def _parse_transcript(path: str, since_iso: str) -> dict:
-    since_dt = None
-    if since_iso:
-        try:
-            since_dt = datetime.fromisoformat(since_iso.replace("Z", "+00:00"))
-        except ValueError:
-            pass
-
+def _parse_subagent_transcript(path: str) -> dict:
+    """Parse subagent JSONL transcript in full (subagent has isolated transcript)."""
     totals = {
         "input_tokens": 0,
         "output_tokens": 0,
@@ -98,16 +93,6 @@ def _parse_transcript(path: str, since_iso: str) -> dict:
                         continue
                     seen_ids.add(msg_id)
 
-                if since_dt:
-                    ts_raw = msg.get("timestamp")
-                    if ts_raw:
-                        try:
-                            ts = datetime.fromisoformat(str(ts_raw).replace("Z", "+00:00"))
-                            if ts < since_dt:
-                                continue
-                        except ValueError:
-                            pass
-
                 usage = msg.get("usage") or (msg.get("message", {}) or {}).get("usage")
                 if usage and isinstance(usage, dict):
                     totals["input_tokens"] += usage.get("input_tokens", 0) or 0
@@ -138,9 +123,8 @@ try:
         sys.exit(0)
 
     timer_id = timer["timer_id"]
-    start_time = timer.get("start_time", "")
 
-    stats = _parse_transcript(transcript_path, start_time) if transcript_path else {}
+    stats = _parse_subagent_transcript(transcript_path) if transcript_path else {}
 
     if not stats or (
         stats["input_tokens"] == 0
@@ -156,11 +140,11 @@ try:
 
     body: dict = {
         "ai_tool": "claude",
-        "mode": "delegated",
+        "mode": "subagent",
         "prompt_count": 0,
         "input_tokens": stats["input_tokens"],
         "output_tokens": stats["output_tokens"],
-        "notes": "auto-logged by Stop hook",
+        "notes": "auto-logged by SubagentStop hook",
     }
     if stats["cache_read_tokens"]:
         body["cache_read_tokens"] = stats["cache_read_tokens"]
