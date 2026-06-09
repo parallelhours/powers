@@ -203,9 +203,17 @@ Stop with: /parallel-powers:session-end
 
 ---
 
-## Subagent timer pattern
+## Subagent token tracking — two patterns
 
-When the main agent dispatches parallel subagents (via `superpowers:dispatching-parallel-agents`), each subagent should track its own time so overlapping AI work is captured correctly.
+### Pattern A: Hook-based (passive, automatic)
+
+The `SubagentStop` hook fires automatically after each subagent finishes. It parses the subagent's isolated transcript and logs tokens with `mode="subagent"` to the active timer found via `session_id`. **No action required from the subagent.**
+
+This is the default for simple subagents that don't need separate timer visibility or LOC tracking.
+
+### Pattern B: Timer-based (explicit, for LOC and concurrent tracking)
+
+Use this when you need each subagent's work in a separate timer record (e.g., for LOC attribution or independent KPI visibility).
 
 **Main agent responsibility — include in every subagent prompt:**
 ```
@@ -225,7 +233,9 @@ At the END of your work, call:
                notes="Subagent: <what you did>")
 ```
 
-**LOC Tracking for Subagents (new):**
+Note: when a subagent uses Pattern B, the SubagentStop hook will also fire and attempt to log the same tokens to the main timer. This produces a small double-count for the session; use Pattern B only when the separate timer record is worth it.
+
+**LOC Tracking for Subagents:**
 - Include `loc_added` and `loc_deleted` in your `stop_timer` call if you generated code
 - Auto-capture works if you're in a git repo: MCP will calculate LOC from diff
 - If not in git or prefer manual logging: pass explicit LOC parameters
