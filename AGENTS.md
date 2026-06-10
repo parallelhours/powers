@@ -78,3 +78,11 @@ Skills are invoked via `$` mention or `/skills` picker.
 - jq for pre-commit-lint hook
 
 > For anything beyond these essentials, consult the relevant `agent-docs/` section.
+
+## Common Agent Tasks
+
+| Task | Guide |
+|------|-------|
+| Create a GitHub release | [`agent-docs/03-howto/create-a-release.md`](agent-docs/03-howto/create-a-release.md) |
+| Add a new MCP server | [`agent-docs/03-howto/add-new-mcp.md`](agent-docs/03-howto/add-new-mcp.md) |
+| Install docs kit | [`agent-docs/03-howto/installation.md`](agent-docs/03-howto/installation.md) |
