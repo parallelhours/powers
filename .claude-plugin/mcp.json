@@ -1,32 +1,3 @@
 {
-  "mcpServers": {
-    "parallelhours": {
-      "command": "uvx",
-      "args": ["parallelhours-mcp"],
-      "env": {
-        "TKPI_PAT": "${input:TKPI_PAT}",
-        "TKPI_BASE_URL": "${input:TKPI_BASE_URL}",
-        "TKPI_PROJECT": "${input:TKPI_PROJECT}"
-      },
-      "inputs": [
-        {
-          "type": "promptString",
-          "id": "TKPI_PAT",
-          "description": "Personal Access Token for parallelhours.io",
-          "password": true
-        },
-        {
-          "type": "promptString",
-          "id": "TKPI_BASE_URL",
-          "description": "Base URL for Parallel Hours API",
-          "default": "https://parallelhours.io"
-        },
-        {
-          "type": "promptString",
-          "id": "TKPI_PROJECT",
-          "description": "Default project key (e.g. TIMEKPI)"
-        }
-      ]
-    }
-  }
+  "mcpServers": {}
 }
