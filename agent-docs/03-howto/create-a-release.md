@@ -58,16 +58,31 @@ For a patch fix (e.g. `v1.4.1`), one or two bullets is enough. For minor/major v
 
 ### 4. Attach the zip asset (if needed)
 
-If users install via `--plugin-url`, the zip must be attached:
+If users install via `--plugin-url`, the zip must be attached.
+
+**Use an explicit include list** — exclude-based approaches inadvertently bundle `engagements/`, `agent-docs/`, `node_modules`, and other non-plugin directories.
 
 ```bash
-# Build zip from repo root
-zip -r parallel-powers.zip . \
-  --exclude "*.git*" --exclude "node_modules/*" --exclude ".DS_Store"
+# Build zip from repo root — include only plugin files
+zip -r parallel-powers.zip \
+  .claude-plugin \
+  .codex-plugin \
+  skills \
+  hooks \
+  .opencode/plugins \
+  .opencode/skills \
+  index.js \
+  package.json \
+  LICENSE \
+  README.md \
+  CLAUDE.md \
+  AGENTS.md
 
 gh release upload <tag> parallel-powers.zip \
   --repo parallelhours/powers
 ```
+
+Expected result: ~70 KB, ~48 files. If the zip is larger than 200 KB, something is wrong — stop and audit with `unzip -l parallel-powers.zip`.
 
 ### 5. Verify
 
