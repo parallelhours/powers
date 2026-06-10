@@ -20,7 +20,7 @@ The repo is a **Claude Code plugin**, **Codex plugin**, and **OpenCode plugin** 
 | **Hooks** (`hooks/`) | Trigger automatically on events: warn on missing timer at startup, count prompts on each message, log tokens on stop, lint before git commit |
 | **OpenCode plugin** (`.opencode/`) | JS plugin with equivalent hook behavior, plus skills for OpenCode's `skill` tool |
 
-#### Skills (v1.4.2)
+#### Skills (v1.4.3)
 
 | Skill | Invoke as | Description |
 |-------|-----------|-------------|
@@ -32,7 +32,7 @@ The repo is a **Claude Code plugin**, **Codex plugin**, and **OpenCode plugin** 
 | `diataxis-install` | `/parallel-powers:diataxis-install` | Bootstrap a Diátaxis agent-docs structure for a new or undocumented project. Runs a structured interview and executes all installer phases. |
 | `diataxis-refresh` | `/parallel-powers:diataxis-refresh` | Refresh stale Diátaxis agent-docs after code changes, architectural decisions, or sprint completion. |
 
-The plugin auto-registers the **parallelhours MCP** on load — no separate installer needed. Set these env vars before starting your agent:
+Install the parallelhours MCP separately using `mcps/installer.py` (see MCP Servers section below). Set these env vars before starting your agent:
 
 | Variable | Required | Default |
 |----------|----------|---------|
@@ -44,7 +44,7 @@ The plugin auto-registers the **parallelhours MCP** on load — no separate inst
 
 ```bash
 # From release (no clone needed):
-claude --plugin-url https://github.com/parallelhours/powers/releases/download/v1.4.2/parallel-powers.zip
+claude --plugin-url https://github.com/parallelhours/powers/releases/download/v1.4.3/parallel-powers.zip
 
 # Or from a local clone:
 claude --plugin-dir /path/to/powers
@@ -71,11 +71,9 @@ Add to `opencode.json`:
 { "plugin": ["powers@git+https://github.com/parallelhours/powers.git"] }
 ```
 
-The MCP is registered automatically via the plugin's `config` hook.
+### MCP Servers
 
-### MCP Servers — Advanced / Standalone Install
-
-The plugin registers the parallelhours MCP automatically. If you need a standalone install (e.g. without the plugin, or to pin credentials into a project `.mcp.json`), use `mcps/installer.py`:
+Install the parallelhours MCP using `mcps/installer.py`:
 
 ```bash
 python -m mcps.installer --mcp parallelhours --agent claude --location project
