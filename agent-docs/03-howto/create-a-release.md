@@ -17,11 +17,35 @@ Releases publish a tagged version of the plugin to GitHub so users can install i
 
 ## Prerequisites
 
-- Tag already exists in git (`git tag -l` to verify)
 - GitHub CLI authenticated (`gh auth status`)
-- On the `main` branch with the tag pushed to origin
+- On the `main` branch, up to date with origin
 
 ## Steps
+
+### 0. Bump version numbers and merge to main
+
+**Claude Code detects updates by reading `.claude-plugin/plugin.json` on the `main` branch — not from the GitHub release tag.** If `main` doesn't reflect the new version, users will never see an update prompt.
+
+Update the version field in every plugin manifest and install-instruction file:
+
+| File | Field |
+|------|-------|
+| `.claude-plugin/plugin.json` | `"version"` |
+| `.codex-plugin/plugin.json` | `"version"` |
+| `package.json` | `"version"` |
+| `.opencode/package.json` | `"version"` |
+| `README.md` | skills section header (`v1.X.Y`) and `--plugin-url` example |
+| `AGENTS.md` | `--plugin-url` example |
+| `CLAUDE.md` | `--plugin-url` example |
+
+Commit these changes, open a PR, and merge to `main` **before** creating the tag and release. The tag should be created from `main` after the version bump lands.
+
+```bash
+# After merging the version bump PR:
+git checkout main && git pull
+git tag v1.X.Z
+git push origin v1.X.Z
+```
 
 ### 1. Verify the tag exists remotely
 

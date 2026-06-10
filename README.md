@@ -20,7 +20,7 @@ The repo is a **Claude Code plugin**, **Codex plugin**, and **OpenCode plugin** 
 | **Hooks** (`hooks/`) | Trigger automatically on events: warn on missing timer at startup, count prompts on each message, log tokens on stop, lint before git commit |
 | **OpenCode plugin** (`.opencode/`) | JS plugin with equivalent hook behavior, plus skills for OpenCode's `skill` tool |
 
-#### Skills (v1.3.0)
+#### Skills (v1.4.2)
 
 | Skill | Invoke as | Description |
 |-------|-----------|-------------|
@@ -44,7 +44,7 @@ The plugin auto-registers the **parallelhours MCP** on load — no separate inst
 
 ```bash
 # From release (no clone needed):
-claude --plugin-url https://github.com/parallelhours/powers/releases/download/v1.3.0/parallel-powers.zip
+claude --plugin-url https://github.com/parallelhours/powers/releases/download/v1.4.2/parallel-powers.zip
 
 # Or from a local clone:
 claude --plugin-dir /path/to/powers
