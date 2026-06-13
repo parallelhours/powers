@@ -98,6 +98,8 @@ Determine mode: `"delegated"` if `estimated_ai_min` was provided and > half of `
 
 Note the returned `duration_minutes` and `loc_added`/`loc_deleted` confirmation.
 
+**If LOC is null/missing:** auto-capture requires the MCP process to have been running since timer start (in-memory SHA state). If the process restarted mid-session, LOC won't be captured automatically. In that case, get the diff from the PR or `git diff --numstat` and call `patch_time_entry(timer_id=<timer_id>, loc_added=<n>, loc_deleted=<n>)` after stopping.
+
 After a successful stop, delete `.session.json` if it exists (`rm -f .session.json`).
 
 ---
