@@ -1,6 +1,6 @@
 {
   "name": "@parallelhours/powers",
-  "version": "1.4.3",
+  "version": "1.4.5",
   "description": "Parallel Powers — session management plugin for OpenCode",
   "main": "index.js",
   "type": "module",
