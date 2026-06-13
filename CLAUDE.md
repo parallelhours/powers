@@ -39,7 +39,7 @@ hooks/                           # Hook scripts and configuration
 **Claude Code** — load from release zip or local clone:
 ```bash
 # From release zip (no clone needed):
-claude --plugin-url https://github.com/parallelhours/powers/releases/download/v1.4.3/parallel-powers.zip
+claude --plugin-url https://github.com/parallelhours/powers/releases/download/v1.4.5/parallel-powers.zip
 
 # Or from a local clone:
 claude --plugin-dir /path/to/parallel-powers
