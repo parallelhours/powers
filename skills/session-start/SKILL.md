@@ -222,15 +222,15 @@ Time tracking context:
   session_id: <session_id>
 
 At the START of your work, call:
-  start_timer(task_id="<task_id>", session_id="<session_id>", notes="Subagent: <what you're doing>")
+  start_session(task_id="<task_id>", session_id="<session_id>", notes="Subagent: <what you're doing>")
   → capture the returned timer_id
 
 At the END of your work, call:
   stop_timer(timer_id=<your_timer_id>, prompt_count=<prompts you used>, 
              loc_added=<lines_added>, loc_deleted=<lines_deleted>)
-  log_ai_event(timer_id=<your_timer_id>, prompt_count=<prompts>, mode="delegated",
-               model_id="claude-sonnet-4-6", estimated_ai_min=<your elapsed minutes>,
-               notes="Subagent: <what you did>")
+  log_session_work(timer_id=<your_timer_id>, prompt_count=<prompts>, mode="delegated",
+                   model_id="claude-sonnet-4-6", estimated_ai_min=<your elapsed minutes>,
+                   notes="Subagent: <what you did>")
 ```
 
 Note: when a subagent uses Pattern B, the SubagentStop hook will also fire and attempt to log the same tokens to the main timer. This produces a small double-count for the session; use Pattern B only when the separate timer record is worth it.
