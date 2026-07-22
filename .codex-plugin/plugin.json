@@ -1,7 +1,7 @@
 {
   "name": "parallel-powers",
   "description": "Time tracking and session management powers for agentic development workflows. Track development time, log AI usage, and manage GitHub issues — all from within your coding agent.",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "author": {
     "name": "parallelhours"
   },
