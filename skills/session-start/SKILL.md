@@ -144,6 +144,7 @@ Call `list_tasks(project_key="TIMEKPI")` and search results for a task whose tit
   - `story_points`: parsed value or omit if null
   - `task_type`: parsed value
   - `priority`: parsed value
+  - `default_driver`: `"ai_agent"` — this session is AI-initiated; pass this explicitly rather than relying on the tool's default, so tasks aren't misattributed as human-driven
 - Note the returned `task_id`
 
 ---
