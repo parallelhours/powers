@@ -16,7 +16,7 @@ The repo is a **Claude Code plugin**, **Codex plugin**, and **OpenCode plugin** 
 
 | Component | What it does |
 |-----------|-------------|
-| **Skills** (`skills/`) | Multi-step workflows invoked explicitly — see full list below |
+| **Skills** (`skills/`) | Multi-step workflows, run by the user as slash commands or by the agent when asked — see full list below |
 | **Hooks** (`hooks/`) | Trigger automatically on events: warn on missing timer at startup, count prompts on each message, log tokens on stop, lint before git commit |
 | **OpenCode plugin** (`.opencode/`) | JS plugin with equivalent hook behavior, plus skills for OpenCode's `skill` tool |
 

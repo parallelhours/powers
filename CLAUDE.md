@@ -18,7 +18,7 @@ This repository is a **Claude Code plugin** (and OpenCode plugin) that provides 
 ```
 .claude-plugin/plugin.json      # Claude Code plugin manifest
 .codex-plugin/plugin.json       # Codex plugin manifest
-skills/                          # Claude Code skills (namespaced, explicitly invoked)
+skills/                          # Claude Code skills (namespaced; user- or agent-invoked)
   session-start/SKILL.md         #   Start a tracked dev session
   session-end/SKILL.md           #   End a tracked dev session
 hooks/                           # Hook scripts and configuration
@@ -58,7 +58,7 @@ Skills are available via the `skill` tool. If OpenCode doesn't discover them aut
 
 ### Skill vs hook model
 
-- **Skills** (`skills/`) define multi-step workflows that Claude/OpenCode executes — checking git state, calling MCP tools, creating branches, starting timers. These are invoked explicitly by the user.
+- **Skills** (`skills/`) define multi-step workflows that Claude/OpenCode executes — checking git state, calling MCP tools, creating branches, starting timers. The user can run them as slash commands, and the agent can run them when asked (e.g. "start a session for #12").
 - **Hooks** (`hooks/`) fire automatically on session events — warn on missing timer at startup, count prompts on each user message, log tokens on stop. These run as background scripts, invisible to the agent.
 - Both can use **MCP tools** (the skills call parallelhours MCP tools directly; hooks use the REST API).
 
