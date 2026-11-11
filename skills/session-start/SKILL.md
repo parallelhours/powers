@@ -1,7 +1,6 @@
 ---
 name: session-start
 description: Start a tracked development session for a GitHub issue. Verifies git state, creates or finds the matching parallelhours task, transitions it to in_progress, and starts a timer.
-disable-model-invocation: true
 license: "PolyForm Noncommercial 1.0.0"
 compatibility: claude, opencode
 metadata:
@@ -128,7 +127,7 @@ If the branch already exists, check it out with `git checkout <branch-name>` and
 ---
 
 ### 4 — Find or create the parallelhours task
-Call `list_tasks(project_key="TIMEKPI")` and search results for a task whose title closely matches the issue title OR whose description references the issue number.
+Call `list_tasks()` without `project_key` (the parallelhours MCP server defaults to its `TKPI_PROJECT`; if no default is configured, ask the user for the project key and pass it) and search results for a task whose title closely matches the issue title OR whose description references the issue number.
 
 **If a matching task is found:**
 - Note its `task_id` and current `status`
@@ -137,9 +136,9 @@ Call `list_tasks(project_key="TIMEKPI")` and search results for a task whose tit
 
 **If no matching task exists:**
 - Call `create_task` with:
-  - `project_key`: `"TIMEKPI"`
+  - `project_key`: the same project key used for `list_tasks` (omit it to use the MCP server's `TKPI_PROJECT` default)
   - `title`: issue title (prefix with `#N: ` where N is the issue number, e.g. `#49: Task linking — link task to GitHub Issue`)
-  - `description`: extracted description + a line at the top: `GitHub Issue: https://github.com/parallelhours/powers/issues/N`
+  - `description`: extracted description + a line at the top: `GitHub Issue: <repo-url>/issues/N` (get `<repo-url>` with `gh repo view --json url -q .url`)
   - `acceptance_criteria`: extracted acceptance criteria (empty string if none found)
   - `story_points`: parsed value or omit if null
   - `task_type`: parsed value
@@ -185,8 +184,8 @@ This file lets `session-end` stop the correct timer without disambiguation, and 
 Print a clear summary:
 ```
 Session started
-  Task:      TIMEKPI-XXX — <title>
-  Issue:     #N (https://github.com/parallelhours/powers/issues/N)
+  Task:      <PROJECT>-XXX — <title>
+  Issue:     #N (<repo-url>/issues/N)
   Branch:    <branch-name>
   Timer:     <timer_id>
   Session:   <session_id>
@@ -230,7 +229,7 @@ At the END of your work, call:
   stop_timer(timer_id=<your_timer_id>, prompt_count=<prompts you used>, 
              loc_added=<lines_added>, loc_deleted=<lines_deleted>)
   log_session_work(timer_id=<your_timer_id>, prompt_count=<prompts>, mode="delegated",
-                   model_id="claude-sonnet-4-6", estimated_ai_min=<your elapsed minutes>,
+                   model_id="<your model ID>", estimated_ai_min=<your elapsed minutes>,
                    notes="Subagent: <what you did>")
 ```
 

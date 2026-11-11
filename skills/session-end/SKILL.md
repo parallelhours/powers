@@ -1,7 +1,6 @@
 ---
 name: session-end
 description: End the current tracked development session. Stops the active timer, logs AI usage, pushes the branch, and transitions the task to the appropriate status.
-disable-model-invocation: true
 license: "PolyForm Noncommercial 1.0.0"
 compatibility: claude, opencode
 metadata:
@@ -65,9 +64,9 @@ Call `get_active_timers()`.
 
 #### Autonomous mode (default)
 Skip all prompts. All AI usage data is captured by hooks:
-- **prompt_count**: already auto-incremented on the timer by the `UserPromptSubmit` hook — pass `0` to `stop_timer` (backend uses accumulated count)
+- **prompt_count**: already auto-incremented on the timer by the `UserPromptSubmit` hook — pass `0` to `stop_timer`. The server keeps the accumulated count when `prompt_count` is 0 or missing, and a positive value can only raise it, never lower it
 - **estimated_ai_min**: full `elapsed_minutes` (session was fully AI-driven)
-- **model_id**: `claude-sonnet-4-6` (current model, known at invocation time)
+- **model_id**: the model ID you are running as (from your system prompt, e.g. `claude-opus-5-5`)
 - **mode**: `delegated`
 - **notes**: `"auto-logged by session-end"`
 
@@ -121,7 +120,7 @@ Call `log_ai_event` with:
 - `estimated_ai_min`: `duration_minutes` (full session was autonomous)
 - `ai_tool`: `"claude"`
 - `mode`: `"delegated"`
-- `model_id`: `"claude-sonnet-4-6"`
+- `model_id`: the model ID from step 2
 - `notes`: `"auto-logged by session-end"`
 
 **Manual (if prompt_count > 0):**
@@ -137,6 +136,7 @@ Call `log_ai_event` with:
 
 ### 4 — Transition task status
 Call `update_task(task_id=<task_id>, status=<target_status>)`.
+Valid transitions are `in_progress → in_review → done`, so for `done` first move the task to `in_review`, then to `done`.
 If this returns a 409 (invalid transition), report the error and ask the user what status to use instead.
 
 ---
@@ -145,7 +145,7 @@ If this returns a 409 (invalid transition), report the error and ask the user wh
 Run `git push -u origin <current-branch>` to push the branch.
 
 Then create a PR with `gh pr create` using:
-- `--title`: the task title (without the TIMEKPI-XXX prefix)
+- `--title`: the task title (without the <PROJECT>-XXX prefix)
 - `--body`: include Summary (bullet points of what changed), Test plan checklist, and a "Closes #N" line for the GitHub issue
 - Do NOT merge — leave it open for review
 
@@ -167,11 +167,11 @@ Tell the user how to check the CI (do NOT wait for the CI yourself): \
 Print a clear summary:
 ```
 Session ended
-  Task:       TIMEKPI-XXX — <title>
+  Task:       <PROJECT>-XXX — <title>
   Duration:   <duration_minutes> min
   Prompts:    auto-tracked  (or <count> if manual)
   AI min:     <duration_minutes> min delegated  (or manual values)
-  Model:      claude-sonnet-4-6  (autonomous) / not logged  (manual, if skipped)
+  Model:      <model_id>  (autonomous) / not logged  (manual, if skipped)
   Code:       +<loc_added> -<loc_deleted> LOC (or "not tracked" if unavailable)
   Speedup:    <ai_speedup_ratio>x  (or "no estimate" if task not estimated)
   Focus:      <score>/10 (<qualifying_focus_minutes> qualifying min today)
